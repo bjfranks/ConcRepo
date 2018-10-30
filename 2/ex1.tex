@@ -1,0 +1,15 @@
+% !TeX root = root.tex
+% !TeX spellcheck = en_US
+\section{Correctness of the Determinization Construction}
+We show that $w \in L(D) \Rightarrow w \in L(N)$, where $D$ is the DFA constructed from the NFA $N$.
+
+Let $w \in L(D)$ be an arbitrary word in the accepted language of $D$. With definition of $L(D)$ there is an accepting run $r_D = r_0^D \dots r_n^D$ of $D$ for $w$. We show by induction that there is also an accepting run $r_0^N \dots r_n^N$ of $N$ for $w$. To simplify notations, we say that a walk is a run that does not have to start with an initial state.
+
+\begin{description}
+\item[Base case:] For $i=0$ we have $w_{n-i+1} \dots w_n = \epsilon$. Since the run $r_D$ is accepting, it holds that $r_n^D \cap F_N \neq \emptyset$. Therefore, there exists a state $r_n^N \in r_n^D \cap F_N$ that gives us an accepting walk of $N$ for the empty word $\epsilon$ with $r_n^N \in r_n^D$.
+\item[Inductive hypothesis:] For $0 \leq i \leq n$ there is an accepting walk $r_{n-i}^N \dots r_n^N$ of $N$ for $w_{n-i+1} \dots w_n$ with $r_{n-i}^N \in r_{n-i}^D$.
+\item[Inductive step:] $i \rightarrow i+1$\\
+With the inductive hypothesis there is a walk $r_{n-i}^N \dots r_n^N$ with $r_n^N \in F_N$ for $w_{n-i+1} \dots w_n$. By construction of $D$ there exists a state $r_{n-(i+1)}^N \in r_{n-(i+1)}^D$ such that $r_{n-i}^N \in \delta_N(r_{n-(i+1)}^N, w_{n-i})$. Thus, $r_{n-(i+1)}^N r_{n-i}^N \dots r_n^N$ is an accepting walk of $N$ for $w_{n-i} \dots w_n$ with $r_{n-(i+1)}^N \in r_{n-(i+1)}^D$.
+\end{description}
+
+Since $r_{n-n}^D = r_0^D = \{q_0^N\}$, it holds that $r_0^N \dots r_n^N$ is an accepting run of $N$ for $w$.
