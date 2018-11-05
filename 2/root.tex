@@ -35,9 +35,13 @@
 \usepackage[]{algorithm2e}
 \usepackage{pdflscape}
 
+\usepackage{pgf}
 \usepackage{tikz}
-\usetikzlibrary{matrix,positioning, automata, arrows}
-
+\usetikzlibrary{matrix,positioning,automata,arrows,shapes,petri}
+\tikzset{
+place/.style={circle,thick,draw=black,minimum size=10mm},
+transition/.style={rectangle,thick,draw=black,minimum width=3mm,inner ysep=5mm, fill=black}
+}
 
 \usepackage{xcolor}
 \definecolor{secblue}{rgb}{0.18, 0.39, 0.77}
