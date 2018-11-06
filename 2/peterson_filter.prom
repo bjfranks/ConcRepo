@@ -1,5 +1,6 @@
 /* Filter-algorithm */
-/*heavily taken from https://github.com/justin-nguyen-1996/Spin_Promela/blob/master/filter.pr as my implementation always had errors */
+/*heavily taken from https://github.com/justin-nguyen-1996/Spin_Promela/blob/master/filter.pr 
+as my implementation always had errors */
 #define N 3
 
 bool q[N];
@@ -17,15 +18,16 @@ active [N] proctype P()
 	    	    
 	    int l;
 	    do
-			:: (q[_pid] == false) -> q[_pid] = true;
-			for (l : 0 .. (N - 1)) { 
-				if 
-				:: (last[k] != _pid || ((level[l] < k && l != _pid) || (l == _pid))) -> q[_pid] = q[_pid] && true;
-				:: else -> q[_pid] = false;
-				fi
-				}
-			:: (q[_pid] == true) -> q[_pid] = false; break;
-			od
+		:: (q[_pid] == false) -> q[_pid] = true;
+		for (l : 0 .. (N - 1)) { 
+			if 
+			:: (last[k] != _pid || ((level[l] < k && l != _pid) 
+			|| (l == _pid))) -> q[_pid] = q[_pid] && true;
+			:: else -> q[_pid] = false;
+			fi
+			}
+		:: (q[_pid] == true) -> q[_pid] = false; break;
+		od
 		}
 	mutex = mutex + 1;
 	assert(mutex == 1);
