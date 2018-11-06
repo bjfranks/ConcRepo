@@ -1,11 +1,4 @@
 % !TeX root = root.tex
 % !TeX spellcheck = en_US.utf-8
-\section{Longest (Worst Case) Shortest Counterexample to a Safety Property for Automata}
-It is possible for the shortest counterexample to be in the length of $O(n*m)$, however this might only be the case if the lowest common multiple of $m$ and $n$ is $m*n$. 
-
-This is clearly the case if $n$ and $m$ are primes, an example in this case would be, the program accepts all words $(a^m)^*$ and the property after inversion accepts all words $(a^n)^*$. Then the smallest element of the intersection would clearly be the smallest common multiple and for primes this is $m*n$. Since $m*n$ is also the number of states it is impossible for there to be a longer, but no shorter, counterexample. 
-
-In the case of concurrency, if $s_i$ is the number of states of program $i$, then the total amount of states would be $p \Pi s_i$. If the programs have different amounts of states, then we could again construct the worst case by choosing each to be a different prime, which would then result in the number of states being the shortest counterexample, however if the programs have to be copies of each other it becomes much more complicated to construct a long counterexample.
-
-A simple construction can prove the bound for $i$ programs of the same type. Choose the programs to have a line of states connected by symbol $a$ and finally a state connected by symbol $finish$.
-Now construct the property such that the negated property has a cycle of size $m-n$, where the first transition symbol is $a$(it is synchronized) and all other symbols in the cycle are $b$(it is not synchronized). Now the same state that has the transition with $a$ also has a transition $finish$ to a line of states only connected by $finish$, only the last state in this line is accepting. This means for each transition in a programm the condition has to loop around the cycle once, and all programs have to execute everything including the $finish$ to reach an accepting state resulting in the shortest path being of length $\Theta(i n (m-n)+n)$, in this case the programs would be a linear factor on the size of the path.
+\section{Peterson's Protocol with more than Two Processes}
+After changing the search depth from $10^4$ to $10^7$ i was able to prove safety for $n=3,4$. For $n>4$ the program didn't terminate for over 30 minutes and i interrupted the execution and there were no errors shown, for what that's worth.
