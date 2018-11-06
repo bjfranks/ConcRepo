@@ -2,6 +2,5 @@
 % !TeX spellcheck = en_US.utf-8
 
 \section{Peterson's Protocol with more than Two Processes}
-\lstset{language=Promela}
-\lstinputlisting {peterson_filter.prom}
+\lstinputlisting [language=Promela] {peterson_filter.prom}
 After changing the search depth from $10^4$ to $10^7$ i was able to prove safety for $n=3,4$. For $n>4$ the program didn't terminate for over 30 minutes and i interrupted the execution and there were no errors shown, for what that's worth.
