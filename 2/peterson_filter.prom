@@ -1,6 +1,9 @@
 /* Filter-algorithm */
-/*heavily taken from https://github.com/justin-nguyen-1996/Spin_Promela/blob/master/filter.pr 
+
+/*heavily taken from 
+github.com/justin-nguyen-1996/Spin_Promela/blob/master/filter.pr 
 as my implementation always had errors */
+
 #define N 3
 
 bool q[N];
@@ -11,26 +14,26 @@ int level[N]=-1;
 /*initialize N Processes*/
 active [N] proctype P()
 {
-	int k = 0;
-	for (k : 0 .. (N - 2)) {
-	    level[_pid] = k;
-	    last[k] = _pid;
+int k = 0;
+for (k : 0 .. (N - 2)) {
+level[_pid] = k;
+last[k] = _pid;
 	    	    
-	    int l;
-	    do
-		:: (q[_pid] == false) -> q[_pid] = true;
-		for (l : 0 .. (N - 1)) { 
-			if 
-			:: (last[k] != _pid || ((level[l] < k && l != _pid) 
-			|| (l == _pid))) -> q[_pid] = q[_pid] && true;
-			:: else -> q[_pid] = false;
-			fi
-			}
-		:: (q[_pid] == true) -> q[_pid] = false; break;
-		od
-		}
-	mutex = mutex + 1;
-	assert(mutex == 1);
-	mutex = mutex - 1;
-	level[_pid] = -1;
+int l;
+do
+:: (q[_pid] == false) -> q[_pid] = true;
+for (l : 0 .. (N - 1)) { 
+if 
+:: (last[k] != _pid || ((level[l] < k && l != _pid) 
+|| (l == _pid))) -> q[_pid] = q[_pid] && true;
+:: else -> q[_pid] = false;
+fi
+}
+:: (q[_pid] == true) -> q[_pid] = false; break;
+od
+}
+mutex = mutex + 1;
+assert(mutex == 1);
+mutex = mutex - 1;
+level[_pid] = -1;
 }
