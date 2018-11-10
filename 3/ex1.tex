@@ -1,0 +1,42 @@
+% !TeX root = root.tex
+% !TeX spellcheck = en_US
+\section{Synchronized Product for DFAs/NFAs with Different Alphabets}
+\subsection{Task 1}
+
+\begin{align*}
+T((Q_M,\Sigma_M,\delta_M,q_{0 M},F_M),\Sigma) = (Q_M,\Sigma,\delta,q_{0 M},F_M)\\
+\delta(q,\sigma)=
+\begin{cases} 
+      \delta_M(q,\sigma) & q\in \Sigma_M\\
+      q & else
+   \end{cases}
+\end{align*}
+
+By the definition in the lecture the extended $\delta(q,\sigma)$ should just do nothing if the symbol is not in the language, this is the same as just doing a self loop, effectively we are doing nothing.
+
+\subsection{Task 2}
+
+\begin{align*}
+T((Q_M,\Sigma_M,\delta_M,q_{0 M},F_M),\Sigma) = (Q_M,\Sigma,\delta,q_{0 M},F_M)\\
+\delta(q,\sigma)=
+\begin{cases} 
+      \delta_M(q,\sigma) 	& q \in \Sigma_M\\
+      \{q\} 				& q \in \Sigma \setminus \Sigma_M
+   \end{cases}
+\end{align*}
+
+By the definition in the lecture the extended $\delta(q,\sigma)$ should just do nothing if the symbol is not in the language, this is the same as just doing a self loop, effectively we are doing nothing.
+
+First of all we will prove that determinization and then using a) is the same as using the definition above and then doing determinization. Clearly the only thing that has to be shown, is that the transition function $\delta_D(q_D,a)$ is the same for both, because nothing else changes.
+
+Let $(Q_D,\Sigma,\delta_{D1},q_{0 D},F_D)$ be the first mentioned automata(i.e. $M \rightarrow D \rightarrow D1$) and $\delta_{D2}$ be the transition of he second mentioned automata(i.e. $M \rightarrow N \rightarrow D2$). Let $\delta_D$ be the transition of the determinized automata before this construction(i.e. $M \rightarrow D$). Let $\delta_N$ be the constructed automata before determinization(i.e. $M \rightarrow N$), essentially $M$ but with a different transition function.
+
+Assume $q' \in \delta_{D1}(q_D,a)$.
+
+Possibility 1 $a \in \Sigma_M \implies \exists q \in q_D : \delta_M(q,a)\ni q' \\\implies \delta_N(q,a)=\delta_M(q,a) \ni q' \in \delta_{D2}(q_D,a)$
+
+Possibility 2 $a \in \Sigma \setminus \Sigma_M \implies q' \in q_D \implies \delta_N(q',a)\ni q' \in \delta_{D2}(q_D,a)$
+
+The other direction works similarly.
+
+Now we can simply refer to the previous task and its explanation why our construction works for the deterministic case.
