@@ -2,3 +2,56 @@
 % !TeX spellcheck = en_US
 \section{Vector Addition System with States}
 
+w.l.o.g.
+Let us encode the marked Petri Net as
+\[N=(S,T,W,M_0)\]
+and let us encode the VASS as
+\[V=(Q,n,\delta,i_0)\]
+
+\subsection{Task 1}
+Given a Petri net $N$ we can encode an equivalent Vass $V$ as:
+\[V=(\{1\},|S|,\delta,i_0)\]
+and w.o.l.g. assume $S=\{1,\dots,m\}$ let
+\[\delta=\{(1,v_t,1)|\forall i \in S : v[i]=W(t,i)-W(i,t)\}\]
+i.e. for every transition $t$ in $T$ add a loop to the VASS that encodes this $t$. Lastly let
+\[i_0=(1,(M_0[1],\dots,M_0[m]))\]
+
+Given a VASS $V$, w.o.l.g $Q=\{1,\dots,l\}$ we can encode an equivalent Petri net $N$ as:
+\[ N=(\{1_V,\dots,n_V \} \cup \{1_Q,\dots,l_Q\},\delta,W,M_0)\]
+\[\forall d=(q,v,q') \in \delta, \forall i \in \{1_V,\dots,n_V\}\] 
+\[W(q,d)=1, W(d,q)=1\]
+\[W(i,d)=
+	\begin{cases} 
+      -v[i] & v[i]<0\\
+      0 & otherwise
+	\end{cases}\]
+\[W(d,i)=
+	\begin{cases} 
+      0 & v[i]<0\\
+      v[i] & otherwise
+	\end{cases}\]
+Lastly w.o.l.g $i_0=(x,(y_1,\dots,y_n))$
+\[M_0[x]=1\]
+\[M_0[i_V]=y_i\]
+
+\subsection{Task 2}
+
+Let $V$ be obtained from $N$ by the above construction. Then a marking $M$ can be transformed to a state for $V$ as follows:
+\[\alpha(M)=(1,(M[1],\dots,M[m]))\]
+
+Assume we are in some marking $M$ and transition $t$ is enabled, such that $M[t>M'$, then for $\alpha(M)$ transition $(1,v_t,1)$ from the construction is usable, because markings are positive and our construction encodes the change in markings, thus $\alpha(M)\rightarrow \alpha(M')$. This is sufficient for an argument by induction.
+
+Assume we are in some marking $M$ and transition $t$ is not enabled, then this marking is not enabled, because one state $s\in S$ in $N$ does not have enough tokens for the transition to fire. However this means $M[s]-W(s,t)<0$ and since $v_t[s]=-W(s,t)$ $\alpha(M)$ cannot fire transition $(1,v_t,1)$. Because we have not added any elements to $\delta$ other than elements from $t\ in T$ this is sufficient for an argument by induction.
+
+Let $N$ be obtained from $V$ by the above construction. Then a state for $V$ can be transformed to a marking $M$ as follows:
+\[\beta((x,(y_1,\dots,y_n)))=M\]
+\[M[i]=
+	\begin{cases} 
+      1 & i=x\\
+      y_j & i=j_V\\
+      0 & otherwise
+	\end{cases}\]
+	
+Assume from state $i=(x,(y_1,\dots,y_n))$ we can reach $i'=(x',(y'_1,\dots,y'_n))$ with transition $d=(x,v,x') \in \delta$. Since $(y_1,\dots,y_n)+v=(y'_1,\dots,y'_n) \geq 0$ the equivalently named transition $d$ in $N$ is enabled and $\beta(i)[d>\beta(i')$. This is sufficient for an argument by induction.
+
+Assume from state $i=(x,(y_1,\dots,y_n))$ transition $d=(x,v,x') \in \delta$ cannot be used. Then this is because $\exists j:y_j+v[j]<0$, however this would be $\beta(i)[j]<W(j,d)$ and thus $d$ is not enabled. This is sufficient for an argument by induction.
