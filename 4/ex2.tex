@@ -3,5 +3,12 @@
 \section{Modified KM tree for Petri Nets}
 
 \subsection{Task 1}
+The given algorithm is incorrect because it doesn't always detect unboundedness (e.g it doesn't set the corresponding value to $\omega$).
+An example where this would occur is given by adding the transition to the example net in lecture notes 3(finite reachibility tree).
+\begin{align*}
+t_7 = (1~1~0~-1~0) 
+\end{align*}
+This leads to either the first or second value to be found unbounded but not both.
 
 \subsection{Task 2}
+This algorithm solves the problem from Task 1 by removing the successors of a marking $A$ that satisfies $A < M$ for the current marking $M$ and accelerates over $A$. By doing both these steps the algorithm "resets" back to A with the updated value $\omega$. This can only happen $n$ times, where $n$ is the number of states. The rest of the algorithm is analoguous to the KarpMillerTree from the lecture and will therefore terminate and solves the covering problem.  
