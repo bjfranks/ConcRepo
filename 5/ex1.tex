@@ -1,0 +1,43 @@
+% !TeX root = root.tex
+% !TeX spellcheck = en_US
+\section{Boundedness for transfer and reset nets}
+\subsection{Task 1}
+Consider the following counter example for transfer nets:
+\begin{center}\begin{tikzpicture}[node distance=2 cm,>=stealth',bend angle=45,auto]
+	\node[place,tokens=1] (1) [label=below:1]{};
+	\node [transition] (t1) [above right of=1,label=above:t1]{}
+		edge[pre, bend right = 20] (1)
+		edge[post,double,bend left=20] (1);
+	\node[place] (2) [below right of=t1,label=below:2]{}
+		edge[pre, bend right = 20] node[midway, above]{2} (t1)
+		edge[post,double,bend left=20] (t1);
+	\node [transition] (t2) [below right of=1,label=above:t2]{}
+		edge[post] (1)
+		edge[pre] (2);
+\end{tikzpicture}\end{center}
+For $M = (1,0)$ and $M^\prime = (1,1)$ we have $M < M^\prime$ and $M [t_1 t_2 \rangle M^\prime$, but
+\[
+M [(t_1 t_2)^2 \rangle (2,1) \neq (1,2) = M + 2 \cdot  (M^\prime - M).
+\]
+
+Similarly, we obtain the following counter example for reset nets:
+\begin{center}\begin{tikzpicture}[node distance=2 cm,>=stealth',bend angle=45,auto]
+	\node[place,tokens=1] (1) [label=below:1]{};
+	\node [transition] (t1) [above right of=1,label=above:t1]{}
+		edge[pre, bend right = 20] (1);
+	\node[place] (2) [below right of=t1,label=below:2]{}
+		edge[pre, bend right = 20] node[midway, above]{2} (t1)
+		edge[post,double,bend left=20] (t1);
+	\node [transition] (t2) [below right of=1,label=above:t2]{}
+		edge[post] (1)
+		edge[pre] (2);
+\end{tikzpicture}\end{center}
+For $M = (1,0)$ and $M^\prime = (1,1)$ we have $M < M^\prime$ and $M [t_1 t_2 \rangle M^\prime$, but
+\[
+M [(t_1 t_2)^2 \rangle (1,1) \neq (1,2) = M + 2 \cdot  (M^\prime - M).
+\]
+
+\subsection{Task 2}
+The boundedness check for transfer nets is still correct. If we can reach a marking $M^\prime$ from a marking $M$ such that $M < M^\prime$, then we are able to produce arbitrarily many tokens since by transfer edges tokens do not get lost.
+
+The boundedness check for reset nets is not correct anymore. In the example for reset nets above we reach a marking $M^\prime$ from a marking $M$ such that $M < M^\prime$. Thus, our algorithm would return ``unbounded'', but further repetitions of $t_1 t_2$ always result in the marking (1,1) and therefore this sequence does not lead to an unbounded number of tokens. 
