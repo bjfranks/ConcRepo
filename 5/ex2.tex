@@ -4,13 +4,15 @@
 
 \subsection{Example 1}
 
-Let $x,y \in X$ with $x \leq y$, then the sequence $(y),(xy),(xxy),(xxxy), \dots$ is a counterexample. $\leq_{lex}$ is not a WQO.
+Let $x,y \in X$ with $x < y$, which supposes $|X| \leq 2$, then the sequence $(y),(xy),(xxy),(xxxy), \dots$ is a counterexample. $\leq_{lex}$ is not a WQO.
 
 \subsection{Example 2}
 
-Let $x,y \in X$ with $x \leq y$, then the sequence $(yy),(xyxy),(xxyxxy),(xxxyxxxy),\dots$ is a counterexample. The argument is basically the y have to be matched by y, otherwise in that position the word is decreasing, and by construction this is not possible. $\leq_{sub}$ is not a WQO.
+Let $x,y \in X$ with $x < y$, which supposes $|X| \leq 2$, then the sequence $(yy),(xyxy),(xxyxxy),(xxxyxxxy),\dots$ is a counterexample. The argument is basically the y have to be matched by y, otherwise in that position the word is decreasing, and by construction this is not possible. $\leq_{sub}$ is not a WQO.
 
 \subsection{Example 3}
+
+$\leq_{emk}$ is not transitive, by the example $12 \leq_{emk} 0120$ and $0120 \leq_{emk} 01020$, however $12 \not\leq_{emk} 01020$. You dont have to continue reading unless you want to see why it fulfills the sequence criterion.
 
 By Dicksons lemma $(X^i,\leq^i)$ is WQO. We will prove $(\bigcup_{i=1}^k X^i,\bigcup_{i=1}^k \leq^i)$ is well quasi order, this implies by Higman's lemma $\leq_{emk}$ is WQO.
 
@@ -20,14 +22,14 @@ I.e. it only compares same sized elements and then uses the $\leq^k$ from the le
 
 \textit{Proof:} Assume the above mentioned is not WQO, then there exists a sequence of non-increasing elements of $\bigcup_{i=1}^k X^i$. The subsequences of all elements of the same size must be infinite for some $j$. i.e. \[\exists j \in [1,\dots,k]:(s_i)_{\{i|s_i\in X^j\}}~\textit{infinite}\] However this is a contradiction to $(X^j,\leq^j)$ being a WQO. This concludes the proof.
 
-$\leq_{emk}$ is WQO.
+$\leq_{emk}$ is WQO, if $\leq_{emk}$ is QO.
 
 \subsection{Example 4}
 
 By Dickson's lemma the Ordering $(X \times \mathbb{N},\leq^2)$ is a WQO. 
 
-\textit{Proof:} Since $(X,\leq)$ WQO and $(\mathbb{N},\leq)$ WQO. It follows that $(X \cup \mathbb{N},\leq)$ is WQO, where $X$ and $\mathbb{N}$ are uncomparable. Thus by Dickson's lemma $((X \cup \mathbb{N})^2,\leq^2)$ is WQO. We then take the subset $(X \times \mathbb{N},\leq^2)$ and have proven the above.
+\textit{Proof:} Since $(X,\leq)$ WQO and $(\mathbb{N},\leq)$ WQO. It follows that $(X \cup \mathbb{N},\leq)$ is WQO, where $X$ and $\mathbb{N}$ are uncomparable. Thus by Dickson's lemma $((X \cup \mathbb{N})^2,\leq^2)$ is WQO. We then take the subset $(X \times \mathbb{N},\leq^2)$ and have proven the above. Of course a subset of an order must not be an order, but in our case reflexivity and transitivity is trivial, we were only interested in showing the sequence criterion.
 
-Now we can reformulate a multiset $s$ to be all possible arrangements of sequences of their elements of the form $(a^{m(a)})_{a \in s}$. Thus two elements are $\leq_{\mathbb{M}}$ if there exists an arrangement for both sequences such that the sequences are embeddings by highman's lemma. Effectively this holds because our $\leq$ is a weaker version of the embedding $\leq$.
+Now we can reformulate a multiset $s$ to be all possible arrangements of sequences of their elements of the form $(a^{m(a)})_{a \in s}$, where $a^{m(a)}$ refers to the tuple $(a,m(a))$ using the definition above(this is for ease of notation). Thus two elements are $\leq_{\mathbb{M}}$ if there exists an arrangement for both sequences such that the sequences are embeddings by highman's lemma. Effectively this holds because our $\leq$ is a weaker version of the embedding $\leq$.
 
 This concludes $\leq_\mathbb{M}$ is WQO
