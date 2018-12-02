@@ -3,12 +3,98 @@
 \section{Comparing models of Communicating State Machines}
 
 \subsection{Task 1}
+The transition rules for point-to-point communication with bags are as follows:
 
-
+Sending a message
+\[
+\infer{(M,C) \rightarrow (M^\prime,C^\prime)}
+{M[i] \xrightarrow{j!a} s & C^\prime = C[(i,j) \leftarrow C[i,j] \cup \{a\}] & 
+M^\prime = M[i \leftarrow s]}
+\]
+Receiving a message
+\[
+\infer{(M,C) \rightarrow (M^\prime,C^\prime)}
+{M[i] \xrightarrow{?a} s & a \in C[j,i] & C^\prime = C[(j,i) \leftarrow C[j,i] \setminus \{a\}] & M^\prime = M[i \leftarrow s]}
+\]
 \subsection{Task 2}
-
+Since a communicating state machine has no mechanism to receive messages dependent on the sender or channel, both the p2p bags and the mailbox bag can be seen as one multiset of received messages. Therefore, every bag+p2p trace is also a bag+mailbox trace and vice versa. 
 
 \subsection{Task 3}
+Since FIFO+mailbox+lookahead only extends the receive rule, it is still possible to not make use of the lookahead by choosing $w$ as empty. Thus, every FIFO+mailbox trace is still a possible FIFO+mailbox+lookahead trace.
 
+Conversely, we can give a FIFO+mailbox+lookahead trace that is not a possible FIFO+mailbox trace in the following example:
 
+\begin{enumerate}[]
+\item $A$:
+\item
+\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+   \node[state,initial] (a_1)   {$a_1$}; 
+   \node[state] (a_2) [right=of a_1] {$a_2$}; 
+   \node[state] (a_3) [right=of a_2] {$a_3$}; 
+    \path[->] 
+    (a_1) edge  node {$B!x$} (a_2)
+    (a_2) edge  node  {$B!y$} (a_3);
+\end{tikzpicture}
+\item $B$:
+\item
+\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+   \node[state,initial] (b_1)   {$b_1$}; 
+   \node[state] (b_2) [right=of b_1] {$b_2$}; 
+    \path[->] 
+    (b_1) edge  node {$?y$} (b_2);
+\end{tikzpicture}
+\end{enumerate}
+The following trace is possible with FIFO+mailbox+lookahead:
+\begin{itemize}
+\item initial state\\
+	$A$: state $a1$, messages: $\epsilon$, $B$: state $b1$, messages: $\epsilon$
+\item $A$ sends to $B$\\
+	$A$: state $a2$, messages: $\epsilon$, $B$: state $b1$, messages: $x$
+\item $A$ sends to $B$\\
+	$A$: state $a3$, messages: $\epsilon$, $B$: state $b1$, messages: $x \cdot y$
+\item $B$ skips $x$ and receives $y$\\
+	$A$: state $a2$, messages: $\epsilon$, $B$: state $b2$, messages: $\epsilon$
+\end{itemize}
+This trace is not possible with FIFO+mailbox, since $B$ can not skip $x$ to receive $y$. So, $B$ can not apply any transitions.
 \subsection{Task 4}
+We suppose that bag+mailbox is meant, since FIFO+bag does not make sense.
+
+Every FIFO+mailbox+lookahead trace is also a bag+mailbox trace, since with a bag it is not necessary to skip messages as the multiset semantics allows us to receive the messages in an arbitrary order. Moreover, in the bag+mailbox setting we can just ignore the messages that are skipped by FIFO+mailbox+lookahead.
+
+To give a bag+mailbox trace that is not possible with FIFO+mailbox+lookahead, we extend the example above as follows:
+\begin{enumerate}[]
+\item $A$:
+\item
+\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+   \node[state,initial] (a_1)   {$a_1$}; 
+   \node[state] (a_2) [right=of a_1] {$a_2$}; 
+   \node[state] (a_3) [right=of a_2] {$a_3$}; 
+    \path[->] 
+    (a_1) edge  node {$B!x$} (a_2)
+    (a_2) edge  node  {$B!y$} (a_3);
+\end{tikzpicture}
+\item $B$:
+\item
+\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+   \node[state,initial] (b_1)   {$b_1$}; 
+   \node[state] (b_2) [right=of b_1] {$b_2$}; 
+   \node[state] (b_3) [right=of b_2] {$b_3$};
+    \path[->] 
+    (b_1) edge  node {$?y$} (b_2)
+    (b_2) edge  node {$?x$} (b_3);
+\end{tikzpicture}
+\end{enumerate}
+The following trace is possible with bag+mailbox:
+\begin{itemize}
+\item initial state\\
+	$A$: state $a1$, messages: $\emptyset$, $B$: state $b1$, messages: $\emptyset$
+\item $A$ sends to $B$\\
+	$A$: state $a2$, messages: $\emptyset$, $B$: state $b1$, messages: $\{x\}$
+\item $A$ sends to $B$\\
+	$A$: state $a3$, messages: $\emptyset$, $B$: state $b1$, messages: $\{x, y\}$
+\item $B$ receives $y$\\
+	$A$: state $a2$, messages: $\emptyset$, $B$: state $b2$, messages: $\{x\}$
+\item $B$ receives $x$\\
+	$A$: state $a2$, messages: $\emptyset$, $B$: state $b3$, messages: $\emptyset$
+\end{itemize}
+This trace is not possible with FIFO+mailbox+lookahead, since to receive $y$, $B$ has to skip $x$. Therefore it can not receive $x$ after $y$ as skipped messages are dropped.
