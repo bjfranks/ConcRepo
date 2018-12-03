@@ -1,5 +1,22 @@
 % !TeX root = root.tex
 % !TeX spellcheck = en_US
 \section{Event-Driven Asynchronous Programs}
+\textbf{Claim: }Asynchronous programs are WSTS.
 
+\textbf{Proof: }Let $(D,\tau,d_0,t_0)$ be an asynchronous program and $(D,T)$ the state of the system.
 
+\begin{itemize}  
+\item $((D,T),\to)$ is TS obviously.
+\item $((D,T),\leq)$ with
+\begin{align*}
+(D,T)\leq (D',T') \Leftrightarrow T\leq T'
+\end{align*}
+is WQO because it is:
+\begin{itemize}
+\item reflexive: $(D,T)\leq (D,T)$ because $T\leq T'$
+\item transitive: Let $(D,T)\leq (D',T')\bigwedge (D',T')\leq (D'',T'')$\\
+$\Rightarrow T\leq T' \bigwedge T'\leq T'' \Rightarrow T\leq T''$
+\item Let $(D_n,T_n)$ be a infinite sequence of  system states. Therefore there exists a $k\in\mathbb{N}$ with $T_k=min\{T_n\vert n\in\mathbb{N}\}$ and an $m\in\mathbb{N},m>k$ with $T_m\geq T_n$.
+\end{itemize}
+\item Compatibility: Let $(D_1,T_1),(D_2,T_2),(D_1',T_1')$ be system states such that \\ $(D_1,T_1)\to (D_2,T_2)\bigwedge (D_1,T_1)\leq (D_1',T_1')$. Set all $(D_2',T_2[i]')$ with the maximum value of $T_2[i]$ and $T_1'[i]$ and their respective $D$ values. It follows that $(D_2',T_2')\geq (D_2,T_2)$ and the transition from $(D_1',T_1')\to (D_2',T_2')$ exists by construction.
+\end{itemize}
