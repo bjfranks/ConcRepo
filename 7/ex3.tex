@@ -1,3 +1,4 @@
 % !TeX root = root.tex
 % !TeX spellcheck = en_US
 \section{Lossy Channel Systems with Test for Empty Channel}
+LCS with test for empty channels are still WSTS. We keep the same $\leq$ relation as in the proof for LCS. It is still a WQO since the semantic rules are never used. We also get stuttering compatibility by dropping messages in the greater system until the contents of the channels are equal to those of the smaller system. Thus, if the smaller system applies an empty channel transition, we just drop all messages in the corresponding channels of the greater system and apply the same empty channel transition.
