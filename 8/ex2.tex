@@ -1,3 +1,24 @@
 % !TeX root = root.tex
 % !TeX spellcheck = en_US
 \section{Effective Pred-basis for Lossy Channel Systems}
+\begin{algorithmic}
+\STATE Input:to cover $(M,C)$, startconfiguration $(\hat{M},\hat{C})$
+\STATE $S \gets (M,C)$
+\STATE $S' \gets \emptyset$
+\WHILE{$S \neq S'$}
+	\STATE $S' \gets S$
+	\FOR{$(M,C) \in S$}{
+		\FOR{ Transition $t$ s.t. $\exists (M',C') \rightarrow^t (M,f(C,t))$ }{
+			\STATE $S \gets S \cup (M',C')$}
+		\ENDFOR}
+	\ENDFOR
+\ENDWHILE
+\RETURN $\exists S \ni (M,C)\leq (\hat{M},\hat{C})$
+\end{algorithmic}
+
+$f(C,t)$ is a function computing the smallest $\hat{C}$ for which transition $t$ can be fired. I.e. it adds a message to some channel in $C$ if $t$ writes this message, otherwise it does nothing and returns $C$.
+
+This algorithm attempts to add to the basis in each step looking for some element it can add. It makes sure to check every possible configuration and only adds smallest configurations with $f(C,t)$
+
+
+
