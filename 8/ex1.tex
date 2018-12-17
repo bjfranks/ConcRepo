@@ -1,3 +1,11 @@
 % !TeX root = root.tex
 % !TeX spellcheck = en_US
 \section{Dining Philosophers in CCS}
+Fork definition:
+\begin{align*}
+F_i = up_i.down_i.F_i,~i\in\{0,...,4\}
+\end{align*}
+Philosopher definition:
+\begin{align*}
+P_i = think.P_i+up_i.up_{(i+1) mod~5}.eat.down_i.down_{(i+1) mod~5}.P_i,~i\in\{0,...,4\}
+\end{align*}
