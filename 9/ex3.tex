@@ -1,0 +1,10 @@
+% !TeX root = root.tex
+% !TeX spellcheck = en_US
+\section{CSM with Insertion Error}
+Let $(\Sigma, M_1, \dots, M_n)$ be a system of communicating state machines with insertion error. For control-state reachability we have to check, whether machine $M_i$ can reach local state $s_i \in S_i$ from the initial state $s_{0_i}$.
+
+Fist we check with DFS whether there is a path from $s_{0_i}$ to $s_i$ by using the transition relation $\rightarrow_i$. If there is such a path, $s_i$ is already reachable in the CSM with insertion Error:
+
+Let $(a_1, \dots, a_m)$ be the sequence of sending and receiving actions of a path from $s_{0_i}$ to $s_i$. In the $k$-th step, $M_i$ sends the message $a$ to machine $M_j$ if $a_k = j!a$ and if $a_k = ?a$ we insert $a$ to the beginning of any channel of $M_i$ and $M_i$ receives $a$. Thus, after $m$ steps, $M_i$ reaches the state $s_i$.
+
+If DFS does not find a path from $s_{0_i}$ to $s_i$, the state $s_i$ is not reachable in the CSM.
