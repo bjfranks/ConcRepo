@@ -1,11 +1,65 @@
 % !TeX root = root.tex
 % !TeX spellcheck = en_US
-\section{Dining Philosophers in CCS}
-Fork definition:
+\section{Weak Bisimulation}
 \begin{align*}
-F_i = up_i.down_i.F_i,~i\in\{0,...,4\}
+& (\nu c)((?a.!c.0|?b.!c.0)&|?c.?c.P) \\
+\equiv & (\nu c)(?a.(!c.0|?b.!c.0+?b.(?a.!c.0|!c.0))&|?c.?c.P)
 \end{align*}
-Philosopher definition:
 \begin{align*}
-P_i = think.P_i+up_i.up_{(i+1) mod~5}.eat.down_i.down_{(i+1) mod~5}.P_i,~i\in\{0,...,4\}
+& (\nu c)(?a.(!c.0|?b.!c.0+?b.(?a.!c.0|!c.0))|?c.?c.P)&&&&\\
+\equiv & (\nu c)(?a.(!c.0|?b.!c.0)|?c.?c.P&+& ?b.(?a.!c.0|!c.0))|?c.?c.P &+& ?c.R)\\
+\equiv & (\nu c)(?a.(!c.0|?b.!c.0)|?c.?c.P)&+& (\nu c)(?b.(?a.!c.0|!c.0))|?c.?c.P) &+& (\nu c)(?c.R)\\
+\equiv & (\nu c)(?a.(!c.0|?b.!c.0)|?c.?c.P)&+& (\nu c)(?b.(?a.!c.0|!c.0))|?c.?c.P) &+& 0\\
+\equiv & (\nu c)(?a.(!c.0|?b.!c.0)|?c.?c.P)&+& (\nu c)(?b.(?a.!c.0|!c.0))|?c.?c.P) &&\\
 \end{align*}
+
+With some analog steps we reach
+
+\begin{align*}
+?a.(\nu c)((!c.0|?b.!c.0)|?c.?c.P)+?b.(\nu c)((?a.!c.0|!c.0))|?c.?c.P)
+\end{align*}
+
+We only consider one of the $+$ and ignore the $?a.$
+
+\begin{align*}
+&(\nu c)((!c.0|?b.!c.0)|?c.?c.P)\\
+\equiv &(\nu c)((!c.(0|?b.!c.0)+?b.(!c.0|!c.0))|?c.?c.P)\\
+\equiv &(\nu c)( ?b.(!c.0|!c.0|?c.?c.P) + (0|?b.!c.0|?c.P))\\
+\equiv &?b.((\nu c)(!c.0|!c.0|?c.?c.P)) + (\nu c)(0|?b.!c.0|?c.P)
+\end{align*}
+
+With multiple steps ignoring resulting 0s we get from the left $+$, ignoring the $?b.$
+\begin{align*}
+&(\nu c)(!c.0|!c.0|?c.?c.P)\\
+\equiv &(\nu c)(0|0|P)\\
+\equiv &(\nu c) P\\
+\equiv &P
+\end{align*}
+
+And the right $+$
+
+\begin{align*}
+&(\nu c)(0|?b.!c.0|?c.P)\\
+\equiv &(\nu c)(?b.!c.0|?c.P)\\
+\equiv &(\nu c)(?b.(!c.0|?c.P))\\
+\equiv &?b.((\nu c)(!c.0|?c.P))\\
+\equiv &?b.((\nu c)(0|P))\\
+\equiv &?b.((\nu c) P)\\
+\equiv &?b.P
+\end{align*}
+
+Both are equal and thus we finally get that the initial left side is equivalent to (we ignored the $?a.$ and the $?b.$ in the first of the two)
+
+\begin{align*}
+&?a.(\nu c)((!c.0|?b.!c.0)|?c.?c.P)\\
+\equiv &?a.?b.P
+\end{align*}
+
+We can do the same analog for the right side and thus get
+
+\begin{align*}
+&(\nu c)((?a.!c.0|?b.!c.0)|?c.?c.P)\\
+\equiv &?a.?b.P + ?b.?a.P
+\end{align*}
+
+Which is what was asked to prove.
