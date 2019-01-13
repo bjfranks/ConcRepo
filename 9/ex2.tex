@@ -1,24 +1,67 @@
 % !TeX root = root.tex
 % !TeX spellcheck = en_US
-\section{Effective Pred-basis for Lossy Channel Systems}
-\begin{algorithmic}
-\STATE Input:to cover $(M,C)$, startconfiguration $(\hat{M},\hat{C})$
-\STATE $S \gets (M,C)$
-\STATE $S' \gets \emptyset$
-\WHILE{$S \neq S'$}
-	\STATE $S' \gets S$
-	\FOR{$(M,C) \in S$}{
-		\FOR{ Transition $t$ s.t. $\exists (M',C') \rightarrow^t (M,f(C,t))$ }{
-			\STATE $S \gets S \cup (M',C')$}
-		\ENDFOR}
-	\ENDFOR
-\ENDWHILE
-\RETURN $\exists S \ni (M,C)\leq (\hat{M},\hat{C})$
-\end{algorithmic}
+\section{From $\nu$-free Process Algebra to Petri Net}
+\subsection{Task 1}
+Let $(\nu \vec{a}) \prod_i A_i(\vec{a_i})$ with $\vec{a_i} \subseteq \vec{a}$ be an initial process in $\nu$-free calculus, i.e. no process definition contains restrictions and $\vec{a}$ contains all names.
+Because of the condition $\vec{c} \cap \operatorname{bn}(P) = \emptyset$ in the receive rule, we can assume that there are no names in input/output prefixes since all names are bound.
 
-$f(C,t)$ is a function computing the smallest $\hat{C}$ for which transition $t$ can be fired. I.e. it adds a message to some channel in $C$ if $t$ writes this message, otherwise it does nothing and returns $C$.
+W.l.o.g. we assume that every process definition has one of the following forms:
+\begin{enumerate}[(I)]
+\item $P(\vec{p}) \stackrel{\text{def}}{=} \pi.Q(\vec{q})$
+\item $P(\vec{p}) \stackrel{\text{def}}{=} Q_1(\vec{q_1}) + Q_2(\vec{q_2})$
+\item $P(\vec{p}) \stackrel{\text{def}}{=} Q_1(\vec{q_1}) \mid Q_2(\vec{q_2})$
+\item $P(\vec{p}) \stackrel{\text{def}}{=} 0$
+\end{enumerate}
+where $\vec{q},\vec{q_1},\vec{q_2} \subseteq \vec{p}$ and $\pi \in \{!a(), ?a()\}$ for $a \in \vec{p}$.
 
-This algorithm attempts to add to the basis in each step looking for some element it can add. It makes sure to check every possible configuration and only adds smallest configurations with $f(C,t)$
+We construct the corresponding Petri net $N = (S, T, W, M_0)$ as follows:
 
+Set $S$ to the set of all process definitions. Then for each process definition $P(\vec{p}) \in S$ create the following transitions:
+\begin{itemize}
+\item if $P(\vec{p}) \stackrel{\text{def}}{=} !a().Q(\vec{q})$ create for each $P^\prime(\vec{p^\prime}) \stackrel{\text{def}}{=} ?a().Q^\prime(\vec{q^\prime}) \in S$:
+\item[] \begin{center}\begin{tikzpicture}[node distance=2 cm,>=stealth',bend angle=45,auto]
+	\node[place] (1) [label=above:$P(\vec{p})$]{};
+	\node [transition] (t) [below right of=1]{}
+		edge[pre] (1);
+	\node[place] (2) [below left of=t,label=below:$P^\prime(\vec{p^\prime})$]{}
+		edge[post] (t);
+	\node[place] (3) [above right of=t,label=above:$Q(\vec{q})$]{}
+		edge[pre] (t);
+	\node[place] (4) [below right of=t,label=below:$Q^\prime(\vec{q^\prime})$]{}
+		edge[pre] (t);
+\end{tikzpicture}\end{center}
+\item if $P(\vec{p}) \in S$ is of form (II):
+\item[] \begin{center}\begin{tikzpicture}[node distance=2 cm,>=stealth',bend angle=45,auto]
+	\node[place] (1) [label=above:$P(\vec{p})$]{};
+	\node [transition] (t1) [above right of=1]{}
+		edge[pre] (1);
+	\node[place] (2) [right of=t1,label=above:$Q_1(\vec{q_1})$]{}
+		edge[pre] (t1);
+	\node [transition] (t2) [below right of=1]{}
+		edge[pre] (1);
+	\node[place] (3) [right of=t2,label=below:$Q_2(\vec{q_2})$]{}
+		edge[pre] (t2);
+\end{tikzpicture}\end{center}
+\item if $P(\vec{p}) \in S$ is of form (III):
+\item[] \begin{center}\begin{tikzpicture}[node distance=2 cm,>=stealth',bend angle=45,auto]
+	\node[place] (1) [label=above:$P(\vec{p})$]{};
+	\node [transition] (t) [right of=1]{}
+		edge[pre] (1);
+	\node[place] (2) [above right of=t,label=above:$Q_1(\vec{q_1})$]{}
+		edge[pre] (t);
+	\node[place] (3) [below right of=t,label=below:$Q_2(\vec{q_2})$]{}
+		edge[pre] (t);
+\end{tikzpicture}\end{center}
+\item if $P(\vec{p}) \in S$ is of form (IV):
+\item[] \begin{center}\begin{tikzpicture}[node distance=2 cm,>=stealth',bend angle=45,auto]
+	\node[place] (1) [label=above:$P(\vec{p})$]{};
+	\node [transition] (t) [right of=1]{}
+		edge[pre] (1);
+\end{tikzpicture}\end{center}
+\end{itemize}
+We set the initial marking $M_0$ such that for each $P(\vec{p}) \in S$ it holds that $M_0(P(\vec{p}))$ is the number of occurrences of $P(\vec{p})$ in the initial process $(\nu \vec{a}) \prod_i A_i(\vec{a_i})$.
 
+By construction the reduction preserves the covering problem.
 
+\subsection{Task 2}
+The reduction is not possible with our definition of transfer nets. We need to be able to transfer the tokens of multiple places in one step.
