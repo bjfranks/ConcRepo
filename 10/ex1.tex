@@ -1,65 +1,26 @@
 % !TeX root = root.tex
 % !TeX spellcheck = en_US
-\section{Weak Bisimulation}
-\begin{align*}
-& (\nu c)((?a.!c.0|?b.!c.0)&|?c.?c.P) \\
-\equiv & (\nu c)(?a.(!c.0|?b.!c.0+?b.(?a.!c.0|!c.0))&|?c.?c.P)
-\end{align*}
-\begin{align*}
-& (\nu c)(?a.(!c.0|?b.!c.0+?b.(?a.!c.0|!c.0))|?c.?c.P)&&&&\\
-\equiv & (\nu c)(?a.(!c.0|?b.!c.0)|?c.?c.P&+& ?b.(?a.!c.0|!c.0))|?c.?c.P &+& ?c.R)\\
-\equiv & (\nu c)(?a.(!c.0|?b.!c.0)|?c.?c.P)&+& (\nu c)(?b.(?a.!c.0|!c.0))|?c.?c.P) &+& (\nu c)(?c.R)\\
-\equiv & (\nu c)(?a.(!c.0|?b.!c.0)|?c.?c.P)&+& (\nu c)(?b.(?a.!c.0|!c.0))|?c.?c.P) &+& 0\\
-\equiv & (\nu c)(?a.(!c.0|?b.!c.0)|?c.?c.P)&+& (\nu c)(?b.(?a.!c.0|!c.0))|?c.?c.P) &&\\
-\end{align*}
+\section{Binary Session Types for Definitions with Arguments}
+To add arguments to process definitions, we need the following type annotations:
+\[A(a_1 : t_1, \dots, a_n : t_n) : t \stackrel{\text{def}}{=} P\]
+Then the type of process definition $A$ has the form $(t,(t_1,\dots,t_n))$.
 
-With some analog steps we reach
-
-\begin{align*}
-?a.(\nu c)((!c.0|?b.!c.0)|?c.?c.P)+?b.(\nu c)((?a.!c.0|!c.0))|?c.?c.P)
-\end{align*}
-
-We only consider one of the $+$ and ignore the $?a.$
-
-\begin{align*}
-&(\nu c)((!c.0|?b.!c.0)|?c.?c.P)\\
-\equiv &(\nu c)((!c.(0|?b.!c.0)+?b.(!c.0|!c.0))|?c.?c.P)\\
-\equiv &(\nu c)( ?b.(!c.0|!c.0|?c.?c.P) + (0|?b.!c.0|?c.P))\\
-\equiv &?b.((\nu c)(!c.0|!c.0|?c.?c.P)) + (\nu c)(0|?b.!c.0|?c.P)
-\end{align*}
-
-With multiple steps ignoring resulting 0s we get from the left $+$, ignoring the $?b.$
-\begin{align*}
-&(\nu c)(!c.0|!c.0|?c.?c.P)\\
-\equiv &(\nu c)(0|0|P)\\
-\equiv &(\nu c) P\\
-\equiv &P
-\end{align*}
-
-And the right $+$
-
-\begin{align*}
-&(\nu c)(0|?b.!c.0|?c.P)\\
-\equiv &(\nu c)(?b.!c.0|?c.P)\\
-\equiv &(\nu c)(?b.(!c.0|?c.P))\\
-\equiv &?b.((\nu c)(!c.0|?c.P))\\
-\equiv &?b.((\nu c)(0|P))\\
-\equiv &?b.((\nu c) P)\\
-\equiv &?b.P
-\end{align*}
-
-Both are equal and thus we finally get that the initial left side is equivalent to (we ignored the $?a.$ and the $?b.$ in the first of the two)
-
-\begin{align*}
-&?a.(\nu c)((!c.0|?b.!c.0)|?c.?c.P)\\
-\equiv &?a.?b.P
-\end{align*}
-
-We can do the same analog for the right side and thus get
-
-\begin{align*}
-&(\nu c)((?a.!c.0|?b.!c.0)|?c.?c.P)\\
-\equiv &?a.?b.P + ?b.?a.P
-\end{align*}
-
-Which is what was asked to prove.
+We change the typing rules as follows:
+\[
+\infer{\Gamma \vdash A(a_1 : t_1, \dots, a_n : t_n) : t \stackrel{\text{def}}{=} P}
+{\Gamma + (a_1,t_1) + \dots + (a_n,t_n) \vdash P : t}
+\]
+\[
+\infer{\Gamma \vdash A(a_1, \dots, a_n) : t}
+{\Gamma(A)=(t,(t_1,\dots,t_n)) & \forall i . \Gamma(a_i) = t_i}
+\]
+\[
+\mathclap{
+\infer{P \mid Q \text{ with } \bigcup_i A_i(a_1^{(i)} : t_1^{(i)},\dots,a_{n_i}^{(i)} : t_{n_i}^{(i)}) : t_i \stackrel{\text{def}}{=} P_i}
+{\forall i,j . i \neq j \Rightarrow A_i \neq A_j & 
+\Gamma = \bigcup_i (A_i,(t_i, (t_1^{(i)},\dots,t_{n_i}^{(i)}))) &
+\forall i . \Gamma \vdash A_i(a_1^{(i)} : t_1^{(i)},\dots,a_{n_i}^{(i)} : t_{n_i}^{(i)}) : t_i \stackrel{\text{def}}{=} P_i &
+\Gamma(P) = \operatorname{dual}(\Gamma(Q))}
+}
+\]
+All other rules are left unchanged.
