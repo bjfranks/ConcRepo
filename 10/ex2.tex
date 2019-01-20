@@ -1,73 +1,35 @@
 % !TeX root = root.tex
 % !TeX spellcheck = en_US
-\section{From $\nu$-free Process Algebra to Petri Net}
-\subsection{Task 1}
-Let $(\nu \vec{a}) \prod_i A_i(\vec{a_i})$ with $\vec{a_i} \subseteq \vec{a}$ be an initial process in $\nu$-free calculus, i.e. no process definition contains restrictions and $\vec{a}$ contains all possible names.
+\section{Limits of Binary Session Types}
 
-W.l.o.g. we assume that every process definition has one of the following forms:
-\begin{itemize}
-\item $P(\vec{p}) \stackrel{\text{def}}{=} !p(\vec{p_1}).Q(\vec{p_2})$
-\item $P(\vec{p}) \stackrel{\text{def}}{=} ?p(\vec{x}).Q(\vec{p_1},\vec{x_1})$
-\item $P(\vec{p}) \stackrel{\text{def}}{=} Q_1(\vec{p_1}) + Q_2(\vec{p_2})$
-\item $P(\vec{p}) \stackrel{\text{def}}{=} Q_1(\vec{p_1}) \mid Q_2(\vec{p_2})$
-\item $P(\vec{p}) \stackrel{\text{def}}{=} 0$
-\end{itemize}
-where $p \in \vec{p}$ and $\vec{p_1},\vec{p_2} \subseteq \vec{p}$ and $\vec{x_1} \subseteq \vec{x}$. So, every process definition contains only one action or control flow element.
+\subsection{Task 1 Can you find a type for the ping-pong example?}
 
-We construct the corresponding Petri net $N = (S, T, W, M_0)$ as follows:
+First we write the ping-pong example as processes.
 
-Set 
-\[S = \{P(\vec{b}) \mid P \text{ process definition}, \vec{b} \subseteq \vec{a} \text{ of suitable length}\}\]
-to the set of all uniquely named processes. 
+\[ping(a,b) =^{def} !a.?b.ping(a,b)\]
+\[pong(a,b) =^{def} ?a.!b.pong(a,b)\]
+\[(\nu~x,y)(ping(x,y)|pong(x,y))\]
 
-Then create the following transitions:
-\begin{itemize}
-\item if $P(\vec{b}) = !a(\vec{b_1}).Q(\vec{b_2})$ and
-$P^\prime(\vec{b^\prime}) = ?a(\vec{x}).Q^\prime(\vec{b_1^\prime},\vec{x_1})$: 
-\item[] \begin{center}\begin{tikzpicture}[node distance=2 cm,>=stealth',bend angle=45,auto]
-	\node[place] (1) [label=above:$P(\vec{b})$]{};
-	\node [transition] (t) [below right of=1]{}
-		edge[pre] (1);
-	\node[place] (2) [below left of=t,label=below:$P^\prime(\vec{b^\prime})$]{}
-		edge[post] (t);
-	\node[place] (3) [above right of=t,label=above:$Q(\vec{b_2})$]{}
-		edge[pre] (t);
-	\node[place] (4) [below right of=t,label=below:$Q^\prime(\vec{b_2^\prime}{,}\vec{c})$]{}
-		edge[pre] (t);
-\end{tikzpicture}\end{center}
-where $\vec{c} \subseteq \vec{b_1}$ corresponds to $\vec{x_1} \subseteq \vec{x}$ when we substitute $\vec{x}$ by $\vec{b_1}$
-\item if $P(\vec{b}) = Q_1(\vec{b_1}) + Q_2(\vec{b_2})$:
-\item[] \begin{center}\begin{tikzpicture}[node distance=2 cm,>=stealth',bend angle=45,auto]
-	\node[place] (1) [label=above:$P(\vec{b})$]{};
-	\node [transition] (t1) [above right of=1]{}
-		edge[pre] (1);
-	\node[place] (2) [right of=t1,label=above:$Q_1(\vec{b_1})$]{}
-		edge[pre] (t1);
-	\node [transition] (t2) [below right of=1]{}
-		edge[pre] (1);
-	\node[place] (3) [right of=t2,label=below:$Q_2(\vec{b_2})$]{}
-		edge[pre] (t2);
-\end{tikzpicture}\end{center}
-\item if $P(\vec{b}) = Q_1(\vec{b_1}) \mid Q_2(\vec{b_2})$:
-\item[] \begin{center}\begin{tikzpicture}[node distance=2 cm,>=stealth',bend angle=45,auto]
-	\node[place] (1) [label=above:$P(\vec{b})$]{};
-	\node [transition] (t) [right of=1]{}
-		edge[pre] (1);
-	\node[place] (2) [above right of=t,label=above:$Q_1(\vec{b_1})$]{}
-		edge[pre] (t);
-	\node[place] (3) [below right of=t,label=below:$Q_2(\vec{b_2})$]{}
-		edge[pre] (t);
-\end{tikzpicture}\end{center}
-\item if $P(\vec{b}) = 0$:
-\item[] \begin{center}\begin{tikzpicture}[node distance=2 cm,>=stealth',bend angle=45,auto]
-	\node[place] (1) [label=above:$P(\vec{b})$]{};
-	\node [transition] (t) [right of=1]{}
-		edge[pre] (1);
-\end{tikzpicture}\end{center}
-\end{itemize}
-We set the initial marking $M_0$ such that for each $P(\vec{b}) \in S$ it holds that $M_0(P(\vec{b}))$ is the number of occurrences of $P(\vec{b})$ in the initial process $(\nu \vec{a}) \prod_i A_i(\vec{a_i})$.
+Since the ping-pong example is defined recursively, we have to start somewhere, thus we make the assumption $\Gamma \vdash ping(a,b):i_{ab}$ this allows us to conclude based on pongs definition, that $\Gamma \vdash pong(a,b):?a;i_{ba}$.
 
-By construction the reduction preserves the covering problem.
+Now because we know how the example is constructed we need \[\Gamma = \{(ping(x,y),i_{xy}),(pong(x,y),o_{xy})\], with $i_{xy}=^{def}!x;?y;i_{xy}$ and analogously for $o_{xy}=^{def}?x;!y;o_{xy}$
 
-\subsection{Task 2}
-The reduction is not possible with our definition of transfer nets. We need to be able to transfer the tokens of multiple places in one step since there can be multiple different kinds of processes that receive the broadcast message in one step.
+By an argument by induction if $\Gamma(ping(x,y))=dual(\Gamma(pong(x,y)))$.
+
+\subsection{Task 2 Can you find a type for the juggling example}
+
+Since I am not sure how to encode channels other than as a state of the system and thus as a type, I will encode channel contents as types, this just multiplies the number of types we would need by the number of possible channel states.
+
+However, since we want a well typed system $(P:t_1)|(Q:t_2)$, $t_1=dual(t_2)$, meaning when left hand sends, right hand has to receive, however both systems send first, thus unless we non-trivially reformulate our notion of duality or the $\Gamma$-System, it is not possible to type the juggling example.
+
+We could redefine sending, to be dual to anything. And receiving to be dual to having the message in the channel. Then we can define the juggling example as a process of the form
+
+\[sh(a,b)=!b.rh(b,a)\]
+\[rh(a,b)=!a.?b.rh(a,b)\]
+\[(\nu~r,l)(sh(l,r)|rh(l,r))\]
+
+Now we would have to hide the channels in the types in the sense that, the type of $\Gamma(sh(a,b))=(b).\Gamma(rh(b,a))$, however it is not clear how the types influence each other throughout the execution.
+
+\subsection{Task 3 Can you find an example which can be typed and where the channels may grow unboundedly?}
+
+Overall I do not understand how we are supposed to have duality, but at the same time have channels that interact with each other. Thus I am unable to answer this question.
