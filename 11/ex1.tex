@@ -1,0 +1,26 @@
+% !TeX root = root.tex
+% !TeX spellcheck = en_US
+\section{Binary Session Types for Definitions with Arguments}
+To add arguments to process definitions, we need the following type annotations:
+\[A(a_1 : t_1, \dots, a_n : t_n) : t \stackrel{\text{def}}{=} P\]
+Then the type of process definition $A$ has the form $(t,(t_1,\dots,t_n))$.
+
+We change the typing rules as follows:
+\[
+\infer{\Gamma \vdash A(a_1 : t_1, \dots, a_n : t_n) : t \stackrel{\text{def}}{=} P}
+{\Gamma + (a_1,t_1) + \dots + (a_n,t_n) \vdash P : t}
+\]
+\[
+\infer{\Gamma \vdash A(a_1, \dots, a_n) : t}
+{\Gamma(A)=(t,(t_1,\dots,t_n)) & \forall i . \Gamma(a_i) = t_i}
+\]
+\[
+\mathclap{
+\infer{P \mid Q \text{ with } \bigcup_i A_i(a_1^{(i)} : t_1^{(i)},\dots,a_{n_i}^{(i)} : t_{n_i}^{(i)}) : t_i \stackrel{\text{def}}{=} P_i}
+{\forall i,j . i \neq j \Rightarrow A_i \neq A_j & 
+\Gamma = \bigcup_i (A_i,(t_i, (t_1^{(i)},\dots,t_{n_i}^{(i)}))) &
+\forall i . \Gamma \vdash A_i(a_1^{(i)} : t_1^{(i)},\dots,a_{n_i}^{(i)} : t_{n_i}^{(i)}) : t_i \stackrel{\text{def}}{=} P_i &
+\Gamma(P) = \operatorname{dual}(\Gamma(Q))}
+}
+\]
+All other rules are left unchanged.
