@@ -1,26 +1,15 @@
 % !TeX root = root.tex
 % !TeX spellcheck = en_US
-\section{Binary Session Types for Definitions with Arguments}
-To add arguments to process definitions, we need the following type annotations:
-\[A(a_1 : t_1, \dots, a_n : t_n) : t \stackrel{\text{def}}{=} P\]
-Then the type of process definition $A$ has the form $(t,(t_1,\dots,t_n))$.
+\section{Peterson's Algorithm and TSO semantics}
 
-We change the typing rules as follows:
-\[
-\infer{\Gamma \vdash A(a_1 : t_1, \dots, a_n : t_n) : t \stackrel{\text{def}}{=} P}
-{\Gamma + (a_1,t_1) + \dots + (a_n,t_n) \vdash P : t}
-\]
-\[
-\infer{\Gamma \vdash A(a_1, \dots, a_n) : t}
-{\Gamma(A)=(t,(t_1,\dots,t_n)) & \forall i . \Gamma(a_i) = t_i}
-\]
-\[
-\mathclap{
-\infer{P \mid Q \text{ with } \bigcup_i A_i(a_1^{(i)} : t_1^{(i)},\dots,a_{n_i}^{(i)} : t_{n_i}^{(i)}) : t_i \stackrel{\text{def}}{=} P_i}
-{\forall i,j . i \neq j \Rightarrow A_i \neq A_j & 
-\Gamma = \bigcup_i (A_i,(t_i, (t_1^{(i)},\dots,t_{n_i}^{(i)}))) &
-\forall i . \Gamma \vdash A_i(a_1^{(i)} : t_1^{(i)},\dots,a_{n_i}^{(i)} : t_{n_i}^{(i)}) : t_i \stackrel{\text{def}}{=} P_i &
-\Gamma(P) = \operatorname{dual}(\Gamma(Q))}
-}
-\]
-All other rules are left unchanged.
+Version 1 is incorrect simply by having both processes $flag[id]=1$ not be updated into global memory before they reach their while, because then $(turn!=id \&\& flag[1-id])$ is false and thus the "wait" does not work.
+
+Version 2 is incorrect, the first program executes until it reaches behind the while, then the second program executes until reaching the while, up until now no updates have taken place. Now we update the second program and then the first program leaving the first programs $turn=1-id$ in memory and thus the second program reaches behind the while. If the fences where synchronized this would be fixed.
+
+Version 3 is incorrect, the $flag[id]=1$ is simply never updated and both program reach behind the while.
+
+Version 4 works. Both while's have to be false(at some point), before the last line of either program is executed. wlog let peterson(0)'s while be false first, this implies either $a$ $turn = 0$ or $b$ $flag[1]=0$.
+
+Case $a$, this is only the case if $peterson(1)$ has made its update $turn=1-1=0$ after $peterson(0)$ has gone through the fence. Now we want $while(1)$ to be false. But we cannot falsify $turn!=id$, because we assumed $p(1)$ has made its update after $p(0)$ and thus $turn=0!=1$. And we cannot falsify $flag[0]==1$, without $p(0)$ making its last line.
+
+Case $b$, this is true as long as $peterson(1)$ has not done any update. Now $p(1)$ has to pass its fence and thus analog to case $a$ the while stays true. 
